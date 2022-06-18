@@ -1,6 +1,13 @@
 <template>
-<h1>App Home</h1>
+  <div class="home">
+  </div>
 </template>
 
 <script>
+
+export default {
+  name: 'Home',
+  components: {
+  }
+}
 </script>

@@ -1,11 +1,62 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
-    <router-link to="/admin/category/add">Add Category</router-link>
+  <div id="app">
+    <div id="nav">
+      <Navbar />
+    </div>
+    <div style="min-height: 60vh">
+      <router-view v-if="products && categories"
+         :baseURL="baseURL"
+         :products="products"
+         :categories="categories"
+         @fetchData = "fetchData">
+      </router-view>
+    </div>
+    <Footer />
   </div>
-  <router-view/>
 </template>
+
+<script>
+
+// const axios = require('axios');
+import axios from 'axios';
+
+import Navbar from "./components/Navbar.vue"
+import Footer from "./components/Footer.vue"
+
+export default {
+  data() {
+    return {
+      baseURL : "http://localhost:8080/",
+      products : null,
+      categories : null
+    }
+  },
+
+  components : { Navbar, Footer},
+  methods : {
+    async fetchData() {
+      // fetch products
+      await axios.get(this.baseURL + "product/")
+              .then(res => {
+                this.products = res.data
+                console.log(this.products)
+                })
+              .catch(err => console.log(err))
+
+      //fetch categories
+      await axios.get(this.baseURL + "category/")
+              .then(res => {
+                this.categories = res.data
+                console.log(this.categories)
+                })
+              .catch(err => console.log(err))
+    }
+  },
+  mounted() {
+    this.fetchData();
+  }
+}
+</script>
 
 <style>
 #app {
@@ -14,10 +65,6 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
 }
 
 #nav a {
